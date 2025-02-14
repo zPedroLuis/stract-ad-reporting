@@ -70,5 +70,25 @@ def get_fields():
     data = get_api_data(f"fields?platform={platform}")
     return jsonify(data.get('fields', []))
 
+@app.route('/api/insights', methods=['GET'])
+def get_insights():
+    platform = request.args.get('platform', '')
+    account = request.args.get('account', '')
+    token = request.args.get('token', '')
+    fields = request.args.get('fields', '').split(',')
+
+    if not platform or not account or not token or not fields:
+        return jsonify({"error": "Os parâmetros 'platform', 'account', 'token' e 'fields' são obrigatórios."}), 400
+    
+    fields_str = ','.join(fields)
+    endpoint = f"insights?platform={platform}&account={account}&token={token}&fields={fields_str}"
+
+    data = get_api_data(endpoint)
+
+    if 'error' in data:
+        return jsonify(data), 500
+    
+    return jsonify(data)
+
 if __name__ == '__main__':
     app.run(debug=True)
