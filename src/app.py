@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import urllib.request
 import json
 
@@ -50,6 +50,15 @@ def get_platforms():
     data = get_api_data("platforms")
     return jsonify(data.get('platforms',[]))
 
+@app.route('/api/accounts', methods=['GET'])
+def get_accounts():
+    platform = request.args.get('platform', '')
+
+    if not platform:
+        return jsonify({"error": "O parâmetro 'platform' é obrigatório"}), 400
+    
+    data = get_api_data(f"accounts?platform={platform}")    
+    return  jsonify(data.get('accounts', []))
 
 if __name__ == '__main__':
     app.run(debug=True)
