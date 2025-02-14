@@ -60,5 +60,15 @@ def get_accounts():
     data = get_api_data(f"accounts?platform={platform}")    
     return  jsonify(data.get('accounts', []))
 
+@app.route('/api/fields', methods = ['GET'])
+def get_fields():
+    platform = request.args.get('platform', '')
+
+    if not platform:
+        return jsonify({"error": "O parâmetro 'platform' é obrigatório"}), 400
+    
+    data = get_api_data(f"fields?platform={platform}")
+    return jsonify(data.get('fields', []))
+
 if __name__ == '__main__':
     app.run(debug=True)
